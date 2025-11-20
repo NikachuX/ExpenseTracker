@@ -12,7 +12,6 @@ app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 db.init_app(app)
 jwt = JWTManager(app)
 
-# Создание таблиц при запуске (только для dev)
 
 @app.route('/register', methods=['POST'])
 def register():

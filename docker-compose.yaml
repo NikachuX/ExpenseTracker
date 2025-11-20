@@ -36,5 +36,17 @@ services:
     volumes:
       - ./transactions_service:/app
 
+  reports-service:
+    build: ./reports_service
+    ports:
+      - "5002:5002"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    depends_on:
+      - db
+    volumes:
+      - ./reports_service:/app
+
 volumes:
   postgres_data:
