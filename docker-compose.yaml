@@ -48,5 +48,18 @@ services:
     volumes:
       - ./reports_service:/app
 
+  ui-service:
+    build: ./ui_service
+    ports:
+      - "5003:5003"
+    environment:
+      - AUTH_URL=http://auth-service:5000
+      - TRANSACTIONS_URL=http://transactions-service:5001
+      - REPORTS_URL=http://reports-service:5002
+    depends_on:
+      - auth-service
+      - transactions-service
+      - reports-service
+
 volumes:
   postgres_data:

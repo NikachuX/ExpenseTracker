@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Отчёты{% endblock %}
+{% block content %}
+<h1>Отчёты за месяц</h1>
+<table>
+    <tr><th>Категория</th><th>Итого</th></tr>
+    {% for rep in reports %}
+    <tr>
+        <td>{{ rep.category }}</td>
+        <td>{{ rep.total }} ₽</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

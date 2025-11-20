@@ -1,0 +1,8 @@
+flask
+flask_sqlalchemy
+psycopg2-binary
+Flask-JWT-Extended
+Werkzeug
+python-dotenv
+requests
+flask-session
