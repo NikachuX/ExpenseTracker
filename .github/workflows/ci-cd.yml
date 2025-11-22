@@ -51,4 +51,4 @@ jobs:
     - name: Run simple tests (example)
       run: |
         echo "Integration tests: curl health checks (mock)"
-        # Добавь pytest позже
+        # Добавлю pytest позже
