@@ -1,0 +1,75 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    env_file: .env
+    environment:
+      POSTGRES_DB: expense_tracker
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  auth-service:
+    image: expensetracker-auth-service:latest
+    env_file: .env
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://user:secret123@db:5432/expense_tracker
+      - JWT_SECRET_KEY=supersecretjwtkeychangeinprod
+    depends_on:
+      - db
+    deploy:
+      replicas: 1
+
+  transactions-service:
+    image: expensetracker-transactions-service:latest
+    env_file: .env
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASE_URL=postgresql://user:secret123@db:5432/expense_tracker
+      - JWT_SECRET_KEY=supersecretjwtkeychangeinprod
+    depends_on:
+      - db
+    deploy:
+      replicas: 1
+
+  reports-service:
+    image: expensetracker-reports-service:latest
+    env_file: .env
+    ports:
+      - "5002:5002"
+    environment:
+      - DATABASE_URL=postgresql://user:secret123@db:5432/expense_tracker
+      - JWT_SECRET_KEY=supersecretjwtkeychangeinprod
+    depends_on:
+      - db
+    deploy:
+      replicas: 1
+
+  ui-service:
+    image: expensetracker-ui-service:latest
+    env_file: .env
+    ports:
+      - "5003:5003"
+    environment:
+      - AUTH_URL=http://auth-service:5000
+      - TRANSACTIONS_URL=http://transactions-service:5001
+      - REPORTS_URL=http://reports-service:5002
+    depends_on:
+      - auth-service
+      - transactions-service
+      - reports-service
+    deploy:
+      replicas: 1
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    driver: overlay

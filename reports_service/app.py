@@ -4,8 +4,6 @@ from models import db, Expense
 from sqlalchemy import func, extract
 import os
 from dotenv import load_dotenv
-import time
-from sqlalchemy.exc import OperationalError
 from datetime import datetime, timedelta
 
 load_dotenv()
@@ -17,24 +15,6 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
 db.init_app(app)
 jwt = JWTManager(app)
-
-
-# Retry для БД
-# def wait_for_db():
-#     max_retries = 10
-#     for i in range(max_retries):
-#         try:
-#             with app.app_context():
-#                 db.engine.execute("SELECT 1")
-#             print(f"БД готова! (попытка {i + 1})")
-#             with app.app_context():
-#                 db.create_all()
-#             return True
-#         except OperationalError as e:
-#             print(f"БД не готова... Ошибка: {e}. Ждём 3 сек (попытка {i + 1}/{max_retries})")
-#             time.sleep(3)
-#     raise Exception(f"Не удалось подключиться к БД после {max_retries} попыток.")
-
 
 @app.route('/reports/<int:user_id>', methods=['GET'])
 @jwt_required()

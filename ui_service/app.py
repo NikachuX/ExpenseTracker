@@ -11,10 +11,10 @@ app.config['SECRET_KEY'] = 'ui-secret-key-change-in-prod'
 app.config['SESSION_TYPE'] = 'filesystem'  # Хранение сессий в файлах
 Session(app)
 
-# URL других сервисов (в Docker — имена контейнеров)
-AUTH_URL = os.getenv('AUTH_URL', 'http://localhost:5000')
-TRANSACTIONS_URL = os.getenv('TRANSACTIONS_URL', 'http://localhost:5001')
-REPORTS_URL = os.getenv('REPORTS_URL', 'http://localhost:5002')
+
+AUTH_URL = os.getenv('AUTH_URL')
+TRANSACTIONS_URL = os.getenv('TRANSACTIONS_URL')
+REPORTS_URL = os.getenv('REPORTS_URL')
 
 @app.route('/')
 def index():

@@ -61,7 +61,6 @@ def get_expenses(user_id):
     ])
 
 
-# Тестовый эндпоинт (опционально)
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({'status': 'OK'})

@@ -1,7 +1,6 @@
-body { font-family: Arial; margin: 20px; }
-nav a { margin-right: 10px; text-decoration: none; }
-.alert { padding: 10px; margin: 10px 0; border: 1px solid; }
-.alert-success { background: lightgreen; }
-.alert-error { background: lightcoral; }
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; }
+nav { background-color: #007bff; padding: 10px; }
+nav a { color: white; margin-right: 15px; text-decoration: none; }
+nav a:hover { color: #0056b3; }
+.alert { margin: 10px 0; border-radius: 5px; }
+main { padding: 20px; }

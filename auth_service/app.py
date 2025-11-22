@@ -55,6 +55,11 @@ def protected():
     return jsonify({'message': f'Доступ разрешён для пользователя {user_id}'})
 
 
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'OK'})
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

@@ -1,0 +1,54 @@
+name: CI/CD Pipeline for Expense Tracker
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push auth-service
+      uses: docker/build-push-action@v5
+      with:
+        context: ./auth_service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/expense-tracker-auth:latest
+
+    - name: Build and push transactions-service
+      uses: docker/build-push-action@v5
+      with:
+        context: ./transactions_service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/expense-tracker-transactions:latest
+
+    - name: Build and push reports-service
+      uses: docker/build-push-action@v5
+      with:
+        context: ./reports_service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/expense-tracker-reports:latest
+
+    - name: Build and push ui-service
+      uses: docker/build-push-action@v5
+      with:
+        context: ./ui_service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/expense-tracker-ui:latest
+
+    - name: Run simple tests (example)
+      run: |
+        echo "Integration tests: curl health checks (mock)"
+        # Добавь pytest позже: pip install pytest && pytest tests/

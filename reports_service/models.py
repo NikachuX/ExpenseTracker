@@ -4,7 +4,7 @@ db = SQLAlchemy()
 
 
 # Импорт модели Expense из Transactions (для запросов)
-class Expense(db.Model):  # Дублируем для простоты; в prod — shared models
+class Expense(db.Model):  # Дублируем для простоты
     __tablename__ = 'expenses'
 
     id = db.Column(db.Integer, primary_key=True)

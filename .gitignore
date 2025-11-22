@@ -6,6 +6,8 @@ venv/
 .env
 *.env
 
+.idea/
+
 # Кэш и байт-код Python
 __pycache__/
 *.py[cod]
