@@ -48,7 +48,32 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/expense-tracker-ui:latest
 
-    - name: Run simple tests (example)
+  test:
+    runs-on: ubuntu-latest
+    needs: build-test-push  # Ждёт build (если fail — тест не запустится)
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'  # Твоя версия
+
+    - name: Install dependencies and run unit tests for auth
       run: |
-        echo "Integration tests: curl health checks (mock)"
-        # Добавлю pytest позже
+        cd auth_service
+        pip install -r requirements.txt
+        python -m pytest tests/ -v --cov=app --cov-report=xml --cov-fail-under=70  # Fail если coverage <70%
+
+    - name: Install dependencies and run unit tests for transactions
+      run: |
+        cd transactions_service
+        pip install -r requirements.txt
+        python -m pytest tests/ -v --cov=app --cov-report=xml --cov-fail-under=70
+
+    - name: Install dependencies and run unit tests for ui
+      run: |
+        cd ui_service
+        pip install -r requirements.txt pytest-mock  # Для @patch
+        python -m pytest tests/ -v

@@ -7,7 +7,7 @@ venv/
 *.env
 
 .idea/
-
+.pytest_cache
 # Кэш и байт-код Python
 __pycache__/
 *.py[cod]
