@@ -8,7 +8,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ui-secret-key-change-in-prod'
-app.config['SESSION_TYPE'] = 'filesystem'  # Хранение сессий в файлах
+app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 
