@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   auth-service:
-    image: expensetracker-auth-service:latest
+    image: bor1ska/expense-tracker-auth:latest
     env_file: .env
     ports:
       - "5000:5000"
@@ -26,7 +26,7 @@ services:
       replicas: 1
 
   transactions-service:
-    image: expensetracker-transactions-service:latest
+    image: bor1ska/expense-tracker-transactions:latest
     env_file: .env
     ports:
       - "5001:5001"
@@ -39,7 +39,7 @@ services:
       replicas: 1
 
   reports-service:
-    image: expensetracker-reports-service:latest
+    image: bor1ska/expense-tracker-reports:latest
     env_file: .env
     ports:
       - "5002:5002"
@@ -52,7 +52,7 @@ services:
       replicas: 1
 
   ui-service:
-    image: expensetracker-ui-service:latest
+    image: bor1ska/expense-tracker-ui:latest
     env_file: .env
     ports:
       - "5003:5003"
