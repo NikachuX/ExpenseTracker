@@ -35,10 +35,10 @@ jobs:
         pip install -r requirements.txt pytest-mock
         python -m pytest tests/ -v
 
-  # 2. ИНТЕГРАЦИОННЫЕ ТЕСТЫ (Проверка тестовой среды)
+  # 2. ИНТЕГРАЦИОННЫЕ ТЕСТЫ
   e2e-test:
     runs-on: ubuntu-latest
-    needs: unit-tests  # Запускаем только если юнит-тесты прошли
+    needs: unit-tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,12 +48,11 @@ jobs:
 
       - name: Run E2E Test Environment
         run: |
-          docker-compose -f docker-compose.test.yaml up --build --abort-on-container-exit --exit-code-from e2e-tests
-
-      # Очистка ресурсов после тестов
+          docker compose -f docker-compose.test.yaml up --build --abort-on-container-exit --exit-code-from e2e-tests
+      
       - name: Teardown Test Environment
         if: always()
-        run: docker-compose -f docker-compose.test.yaml down -v
+        run: docker compose -f docker-compose.test.yaml down -v
 
   # 3. СБОРКА И ПУШ
   build-and-push:
