@@ -11,6 +11,12 @@ services:
       - "5433:5432"
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data # Отдельный том
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d expense_tracker" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
 
   auth-service:
     image: bor1ska/expense-tracker-auth:latest
@@ -20,7 +26,8 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - db_staging
+      db_staging:
+        condition: service_healthy
 
   transactions-service:
     image: bor1ska/expense-tracker-transactions:latest
@@ -30,7 +37,8 @@ services:
     ports:
       - "5001:5001"
     depends_on:
-      - db_staging
+      db_staging:
+        condition: service_healthy
 
   reports-service:
     image: bor1ska/expense-tracker-reports:latest
@@ -40,7 +48,8 @@ services:
     ports:
       - "5002:5002"
     depends_on:
-      - db_staging
+      db_staging:
+        condition: service_healthy
 
   ui-service:
     image: bor1ska/expense-tracker-ui:latest
