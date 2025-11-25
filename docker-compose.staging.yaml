@@ -10,9 +10,9 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_staging_data:/var/lib/postgresql/data # Отдельный том
+      - postgres_staging_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U user -d expense_tracker" ]
+      test: [ "CMD-SHELL", "pg_isready -U user_stg -d expense_tracker_staging" ]
       interval: 5s
       timeout: 5s
       retries: 10
