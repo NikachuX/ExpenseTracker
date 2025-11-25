@@ -113,17 +113,17 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Pull Docker Images
-        run: docker compose -f docker-compose-swarm.yaml pull
+        run: docker compose -f docker-compose.staging.yaml pull
 
       - name: Start Production Stack
-        run: docker compose -f docker-compose-swarm.yaml up -d
+        run: docker compose -f docker-compose.staging.yaml up -d
 
       - name: Wait for Services to initialize
         run: sleep 15
 
       - name: Check Containers Status
         run: |
-          docker compose -f docker-compose-swarm.yaml ps
+          docker compose -f docker-compose.staging.yaml.yaml ps
           if [ $(docker ps -q | wc -l) -lt 4 ]; then
             echo "Error: Not all containers started!"
             docker ps -a
@@ -137,4 +137,4 @@ jobs:
 
       - name: Teardown
         if: always()
-        run: docker compose -f docker-compose-swarm.yaml down -v
+        run: docker compose -f docker-compose.staging.yaml.yaml down -v
