@@ -119,7 +119,7 @@ jobs:
         run: docker compose -f docker-compose.staging.yaml up -d
 
       - name: Wait for Services to initialize
-        run: sleep 15
+        run: sleep 30
 
       - name: Check Containers Status
         run: |
