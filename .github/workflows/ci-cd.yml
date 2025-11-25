@@ -123,7 +123,7 @@ jobs:
 
       - name: Check Containers Status
         run: |
-          docker compose -f docker-compose.staging.yaml.yaml ps
+          docker compose -f docker-compose.staging.yaml ps
           if [ $(docker ps -q | wc -l) -lt 4 ]; then
             echo "Error: Not all containers started!"
             docker ps -a
@@ -137,4 +137,4 @@ jobs:
 
       - name: Teardown
         if: always()
-        run: docker compose -f docker-compose.staging.yaml.yaml down -v
+        run: docker compose -f docker-compose.staging.yaml down -v
