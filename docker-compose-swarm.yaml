@@ -2,7 +2,6 @@ version: '3.8'
 services:
   db:
     image: postgres:15
-    env_file: .env
     environment:
       POSTGRES_DB: expense_tracker
       POSTGRES_USER: user
@@ -14,7 +13,6 @@ services:
 
   auth-service:
     image: bor1ska/expense-tracker-auth:latest
-    env_file: .env
     ports:
       - "5000:5000"
     environment:
@@ -27,7 +25,6 @@ services:
 
   transactions-service:
     image: bor1ska/expense-tracker-transactions:latest
-    env_file: .env
     ports:
       - "5001:5001"
     environment:
@@ -40,7 +37,6 @@ services:
 
   reports-service:
     image: bor1ska/expense-tracker-reports:latest
-    env_file: .env
     ports:
       - "5002:5002"
     environment:
@@ -53,7 +49,6 @@ services:
 
   ui-service:
     image: bor1ska/expense-tracker-ui:latest
-    env_file: .env
     ports:
       - "5003:5003"
     environment:
