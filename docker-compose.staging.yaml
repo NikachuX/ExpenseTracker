@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db_staging:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: expense_tracker_staging
+      POSTGRES_USER: user_stg
+      POSTGRES_PASSWORD: secret_stg
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data # Отдельный том
+
+  auth-service:
+    image: bor1ska/expense-tracker-auth:latest
+    environment:
+      - DATABASE_URL=postgresql://user_stg:secret_stg@db_staging:5432/expense_tracker_staging
+      - JWT_SECRET_KEY=staging-jwt-key
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db_staging
+
+  transactions-service:
+    image: bor1ska/expense-tracker-transactions:latest
+    environment:
+      - DATABASE_URL=postgresql://user_stg:secret_stg@db_staging:5432/expense_tracker_staging
+      - JWT_SECRET_KEY=staging-jwt-key
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db_staging
+
+  reports-service:
+    image: bor1ska/expense-tracker-reports:latest
+    environment:
+      - DATABASE_URL=postgresql://user_stg:secret_stg@db_staging:5432/expense_tracker_staging
+      - JWT_SECRET_KEY=staging-jwt-key
+    ports:
+      - "5002:5002"
+    depends_on:
+      - db_staging
+
+  ui-service:
+    image: bor1ska/expense-tracker-ui:latest
+    environment:
+      - AUTH_URL=http://auth-service:5000
+      - TRANSACTIONS_URL=http://transactions-service:5001
+      - REPORTS_URL=http://reports-service:5002
+    ports:
+      - "5003:5003"
+    depends_on:
+      - auth-service
+      - transactions-service
+      - reports-service
+
+volumes:
+  postgres_staging_data:

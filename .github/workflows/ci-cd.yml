@@ -35,7 +35,7 @@ jobs:
         pip install -r requirements.txt pytest-mock
         python -m pytest tests/ -v
 
-  # 2. ИНТЕГРАЦИОННЫЕ ТЕСТЫ
+  # 2. E2E ТЕСТЫ
   e2e-test:
     runs-on: ubuntu-latest
     needs: unit-tests
@@ -49,7 +49,7 @@ jobs:
       - name: Run E2E Test Environment
         run: |
           docker compose -f docker-compose.test.yaml up --build --abort-on-container-exit --exit-code-from e2e-tests
-      
+
       - name: Teardown Test Environment
         if: always()
         run: docker compose -f docker-compose.test.yaml down -v
@@ -57,7 +57,7 @@ jobs:
   # 3. СБОРКА И ПУШ
   build-and-push:
     runs-on: ubuntu-latest
-    needs: e2e-test  # Пушим ТОЛЬКО если тесты среды прошли успешно
+    needs: e2e-test
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -98,3 +98,43 @@ jobs:
         context: ./ui_service
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/expense-tracker-ui:latest
+
+  deploy-verification:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull Docker Images
+        run: docker compose -f docker-compose-swarm.yaml pull
+
+      - name: Start Production Stack
+        run: docker compose -f docker-compose-swarm.yaml up -d
+
+      - name: Wait for Services to initialize
+        run: sleep 15
+
+      - name: Check Containers Status
+        run: |
+          docker compose -f docker-compose-swarm.yaml ps
+          if [ $(docker ps -q | wc -l) -lt 4 ]; then
+            echo "Error: Not all containers started!"
+            docker ps -a
+            exit 1
+          fi
+
+      - name: Smoke Test (Check UI Availability)
+        run: |
+          curl --fail http://localhost:5003 || exit 1
+          echo "Application is reachable!"
+
+      - name: Teardown
+        if: always()
+        run: docker compose -f docker-compose-swarm.yaml down -v
