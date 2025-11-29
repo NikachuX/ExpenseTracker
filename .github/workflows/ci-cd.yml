@@ -2,10 +2,9 @@ name: CI/CD Pipeline for Expense Tracker
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
-  # 1. ЮНИТ-ТЕСТЫ
   unit-tests:
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +34,6 @@ jobs:
         pip install -r requirements.txt pytest-mock
         python -m pytest tests/ -v
 
-  # 2. E2E ТЕСТЫ
   e2e-test:
     runs-on: ubuntu-latest
     needs: unit-tests
@@ -54,7 +52,6 @@ jobs:
         if: always()
         run: docker compose -f docker-compose.test.yaml down -v
 
-  # 3. СБОРКА И ПУШ
   build-and-push:
     runs-on: ubuntu-latest
     needs: e2e-test
@@ -119,7 +116,7 @@ jobs:
         run: docker compose -f docker-compose.staging.yaml up -d
 
       - name: Wait for Services to initialize
-        run: sleep 30
+        run: sleep 15
 
       - name: Check Containers Status
         run: |

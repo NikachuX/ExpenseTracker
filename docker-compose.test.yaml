@@ -40,7 +40,6 @@ services:
       db_test:
         condition: service_healthy
 
-  # --- ТЕСТ-РАННЕР  ---
   e2e-tests:
     image: python:3.10-slim
     volumes:
